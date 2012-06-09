@@ -6,6 +6,40 @@ require 'ysd-plugins_viewlistener' unless defined?Plugins::ViewListener
 module Huasi
 
   class CommunityExtension < Plugins::ViewListener
+
+    # ========= Page Building ============
+    
+    #
+    # It gets the style sheets defined in the module
+    #
+    # @param [Context]
+    #
+    # @return [Array]
+    #   An array which contains the css resources used by the module
+    #
+    def page_style(context={})
+
+      ['/css/960.css',
+       '/community/css/community.css',
+       '/entitymanagement/css/entity.management.css']
+
+    end
+
+    #
+    # It gets the scripts used by the module
+    #
+    # @param [Context]
+    #
+    # @return [Array]
+    #   An array which contains the css resources used by the module
+    #
+    def page_script(context={})
+    
+      ["/photo_gallery/js/ysd-photo-gallery.js"]    
+    
+    end
+
+
             
     # ========= Routes ===================
     
