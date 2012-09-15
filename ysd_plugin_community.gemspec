@@ -8,7 +8,11 @@ Gem::Specification.new do |s|
   s.description = "Community integration"
   s.summary = "Community integration"
   
-  s.add_runtime_dependency "ysd_core_plugins"
-  s.add_runtime_dependency "ysd_mw_community"
+  s.add_runtime_dependency "ysd_plugin_site"           # Page serving
+  s.add_runtime_dependency "ysd_plugin_profile"        # Model access through REST API
+  s.add_runtime_dependency "ysd_plugin_media_gallery"  # Model access through REST API ** REVIEW **
+  s.add_runtime_dependency "ysd_core_plugins"          # The plugin system : to extend the module functionality
+  s.add_runtime_dependency "ysd_core_themes"           # Themes : serving static content
+
   
 end

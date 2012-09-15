@@ -1,3 +1,4 @@
-forum_admin_menu:
-  forum_menu: Foros
-  forum_management: Foro
+community:
+  members: Tots
+  members_literal : persones
+  send_a_message: Enviar missatge 

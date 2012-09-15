@@ -1,3 +1,4 @@
-forum_admin_menu:
-  forum_menu: Foros
-  forum_management: Foro
+community:
+  members: All  
+  members_literal: members
+  send_a_message: Send message

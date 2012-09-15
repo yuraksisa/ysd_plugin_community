@@ -1,0 +1,362 @@
+<!-- 
+     Members VIEW 
+     =========================
+     
+     Description :
+     -------------
+     It shows a list of members, and it queries the system using its REST API to get the data 
+
+     The view is organized in three blocks :
+       
+        - members_search
+        - members_list
+        - members_navigation
+        
+     It uses a 'profile_template' JS template to render the member information
+
+     Social extension applied :
+     --------------------------
+     search : to show an specific search form
+
+-->
+<div id="members" class="elements-container">
+   
+   <div id="members_search" class="top-navigation-bar navigation-bar">   
+     <%= call_hook(:community_search) %> 
+   </div>
+   
+   <div id="members_list" class="elements-list">
+   </div>
+   
+   <div class="bottom-navigation-bar navigation-bar">
+     <div id="members_navigation" class="navigation-bar-nav-buttons">
+        <span id="messages_summary_page" class="elements-summary"></span>
+        <button id="previous_page_button" class="form-button previous-page-button navigation-button entity-management-button" title="previous page">&lt;</button>
+        <button id="next_page_button" class="form-button next-page-button navigation-button entity-management-button" title="next page">&gt;</button>
+     </div>
+   </div>
+</div>    
+    
+<script type="text/javascript">
+
+  membersModel = {
+  	
+  	state : 'initial',
+  	
+  	error_message : '',
+  	
+  	search_result : [], /* Holds the search results */
+  	
+  	summary : null,     /* Hold the search summary */
+  	  	
+  	default_search_url : '/profiles',  	
+  	  	
+  	search_url : null,   	
+  	
+  	last_search_params : null,
+  	
+  	navigator : { /* It's an object used to Navigate */
+      
+      hash_page_expression : /^page\/(\d+)$/,
+  	  page : 1, /* The messages page shown */
+      page_size : <%= options.profiles_page_size %>, /* The messages shown in a page */
+      
+      navigate : function () { /* Navigate */
+      	
+      	var old_page = this.page;
+      	
+      	var the_hash = window.location.hash.substring(window.location.hash.indexOf('#')+1);
+      	
+  	    var parse_expression=the_hash.match(this.hash_page_expression);
+  	    
+  	    if (parse_expression) {
+  	      this.page = new Number(parse_expression[1]);
+  	    }
+  	    
+  	    if (old_page != this.page) {
+          membersModel.search();
+  	    }
+	      	    	
+      },
+      
+      isFirstPage : function() { /* Check if we are in the first page */
+      	return this.page == 1;
+      },
+      
+      isLastPage : function() { /* Check if we are in the last page */
+        return (this.page_size * this.page) >=  membersModel.summary.total;
+      },
+ 	 
+ 	  back_to_page : function() {
+ 	    this.page_loaded();	
+ 	  },
+ 	  
+ 	  page_loaded : function() {
+ 	    this.update_hash();
+ 	  },
+ 	   	  
+ 	  getHash : function() { /* Get the hash */
+ 	    return 'page/'+this.page; 	
+ 	  },
+ 	  
+ 	  getPageNavigationQuery : function() {
+ 	  	return 'page/' + this.page;
+ 	  },
+ 	  
+ 	  summary_page_message : function() { /* Get the summary block message */
+ 	     return membersModel.summary.total + ' <%= t.community.members_literal %>';
+ 	  /*	return Math.max(((membersModel.navigator.page-1) * membersModel.navigator.page_size), 1)+ ' - ' + Math.min(((membersModel.navigator.page) * membersModel.navigator.page_size), membersModel.summary.total) + ' de ' + membersModel.summary.total; */
+ 	  },
+ 	  
+ 	  update_hash : function() {
+ 	  
+ 	    var new_hash = this.getHash();
+ 	    if (new_hash != window.location.hash.substring(window.location.hash.indexOf('#')))
+ 	    {
+ 	  	  window.location.hash = this.getHash();
+ 	    }
+ 	  },
+ 	  
+      previousPage : function() { /* Previous page */
+  	
+  	    if (!this.isFirstPage()) {
+  	  
+  	      this.page--;
+  	      membersModel.search();
+  	  	
+  	    }
+  	
+  	  },
+  	
+  	  nextPage : function() { /* Next page */
+  	 
+  	    if (!this.isLastPage()) {
+  	  
+  	      this.page++;
+  	      membersModel.search();
+  	  	
+  	    }
+  	
+  	  } 	  	   
+ 	   	
+  	},
+  	  	  	  	
+  	change_state : function(action) { /** Change state **/
+  		
+  	  switch (action) {
+  	  	
+  	  	case 'send_request' :
+  	  	
+  	  	  this.state = 'sending_request';
+  	  	  break;
+  	  	  
+  	    case 'search_success' :
+  	      this.state = 'process_done';
+  	      this.save_state(); // Holds the state (to recover it when back button)
+  	      break;
+  	    
+  	    case 'search_error' :
+  	  	  this.state = 'process_error';
+  	  	  break;
+  	  }
+  	  
+  	  membersView.state_changed(this.state);
+  		
+  	},
+  	
+  	search : function(request, search_url) { /** Search profiles **/
+  	
+  	  if (typeof request != 'undefined' && request['search']) {
+  	    delete request['search'];
+  	  }
+  
+      // stores the query information 
+
+  	  if (typeof search_url != 'undefined') {
+  	    membersModel.search_url = search_url;	
+  	  }
+  	  
+  	  if (typeof request != 'undefined') {
+  	    membersModel.last_search_params = request;  	
+  	  } 
+  		
+  	  var query_url    = search_url || membersModel.search_url || membersModel.default_search_url;	
+  	  query_url += '/page/' + this.navigator.page;
+  	  var query_params = request || membersModel.last_search_params || {};
+  		
+  	  request_json = JSON.stringify(query_params);	
+  		
+  	  $.ajax( 
+  	    { 
+  	      type : 'POST',
+  	      url  : query_url,
+  	      data : request_json,
+  	      data_type : 'json',
+  	      content_type : 'application/json; charset=utf-8', //data sent
+  	      success : function(data, textStatus, jqXHR) {
+  	
+  	        // load the results
+  	        membersModel.search_result = data.data;
+  	        membersModel.summary = data.summary;
+  	        membersModel.change_state('search_success');
+  	      	
+  	      },
+  	      error : function(data, textStatus, jqXHR) {
+  	      	membersModel.error_message = textStatus;
+  	        membersModel.change_state('search_error');
+  	      }
+  	    });  	
+  		
+  	},
+  	
+  	save_state : function() { /* Save the state in the local storage to recover when the page is reloaded */
+  		
+  	  if (typeof localStorage != "undefined") {
+  	     localStorage.setItem("members_results",JSON.stringify({'search_url':membersModel.search_url,'search_result':membersModel.search_result,'page':membersModel.navigator.page,'total':membersModel.summary.total}));
+  	     window.location.hash = "search";
+  	  }  		
+  		
+  	},
+  	
+  	recover_state : function() { /* Recover the state when the page is reloaded */
+  		  	
+      if (typeof localStorage != "undefined") {
+      	if (window.location.hash.match("search")) {
+          results = (data=localStorage.getItem("members_results"))?JSON.parse(data):{'search_url':null, 'search_result':[], 'page':1, 'total':0};   	
+          membersModel.search_result = results.search_result;
+          membersModel.search_url = results.search_url;
+          if (membersModel.summary == null) {
+            membersModel.summary = {};
+          }
+          membersModel.summary.total = results.total;
+          membersModel.navigator.page = results.page;
+          membersModel.change_state('search_success');
+          return true;   	
+      	}
+      	else {
+      	  localStorage.removeItem("member_results");
+      	}
+      }  	
+  	  return false;
+  	  	
+  	}
+  	
+  	
+  };
+  
+  membersController = {
+  	
+  	
+  	search : function(params) { /* Search profiles action */
+  		
+  	  membersModel.search(params);	
+  		
+  	},
+  	
+  	previousPage : function() { /* load the previous page */
+  	
+  	  membersModel.navigator.previousPage();
+  	  	
+  	},
+  	
+  	nextPage : function() { /* load the next page */
+  	  
+  	  membersModel.navigator.nextPage();
+  	
+  	}
+ 
+  	
+  };
+  
+  membersView = {
+  	
+  	show_profile_template : null, /* Show profile template */
+  	
+  	init : function() {
+  	
+  	  if (!membersModel.recover_state()) {
+  	  	membersModel.search();
+  	  }
+  		
+  	  $('#previous_page_button').bind('click', function() {
+  	 	membersController.previousPage();
+  	  });
+  		
+  	  $('#next_page_button').bind('click', function() {
+  		membersController.nextPage();
+  	  });  		
+  		
+  	},
+  	
+  	state_changed : function(status) {
+  		
+  		switch (status) {
+  			
+  		  case 'searching' :
+  		  
+  		    break;	
+  			
+  		  case 'process_done' :
+  		   
+            this.load_results();  		   
+  		    break;
+  		
+  		  case 'process_error' :
+  		  
+            $('<div title="<%= t.search_form.search_error_title %>"> <%= t.search_form.search_error_description %> </div>').dialog( { height: 160, modal: true,     	 
+       	        buttons: {
+       	            Ok: function() {
+				   	$( this ).dialog( "close" );
+				  }
+				}
+           	  });         		  
+  		  
+  		    break;
+  		
+  		}
+  		
+  		
+  	},
+  	
+  	load_results : function() {
+  		
+      var html = '';
+  		    
+  	  if (membersModel.search_result.length > 0) {
+  	  	
+  	  	 if (this.show_profile_template == null) {
+  	  	   this.show_profile_template = tmpl('profile_summary');
+  	  	 }
+  	  	
+  	  	 var index = 0;
+  	     for (profile in membersModel.search_result) 
+  	     {
+  		   html += this.show_profile_template({'index':index++, 'profile':membersModel.search_result[profile]});	
+  		 }
+  		 
+  	  }
+  	  else
+  	  {
+  	    html = '<div class="container_12"><div class="grid_11 suffix_1"><div id="search_members_no_results"><p><%= t.search_form.no_results%></p></div></div></div>';	
+  	  }	   
+  	  
+  	  $('#members_list').html( html );
+  	
+  	  $('#messages_summary_page').html( membersModel.navigator.summary_page_message() );	
+  		
+  	}
+  	
+  	
+  };  
+
+  $(document).ready( function() {
+
+      membersView.init();
+            
+  });
+
+</script>
+
+<!-- Include the member rendering/management -->
+
+<%= include('community-member') %>

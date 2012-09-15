@@ -1,0 +1,70 @@
+#community_menu {
+
+ padding: 15px 0px 15px 0px;
+ margin-left: 15px;
+	
+}
+
+.no-margin-right {
+ margin-right: 0px;	
+}
+
+.no-margin-left {
+ margin-left: 0px;	
+}
+
+#members_list {
+ margin-top: 10px;
+ overflow: hidden;	
+}
+
+#messages_summary_page {
+ padding-top: 10px;	
+}
+
+
+.profile_summary {
+	
+ /*padding: 5px;*/
+ margin-bottom: 5px;
+	
+}
+
+.profile_summary * {
+ font-size: 12px;	
+}
+
+.profile_summary_photo {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  width : 134px;
+  height: 134px;
+  display: block;
+  margin: 0 auto;
+}
+
+.profile_summary_photo_block {
+ background-color: white;
+ border: 1px solid #CCC;
+
+ -webkit-border-radius: 7px; /* Safari  */ 
+ -moz-border-radius: 7px; /* Firefox */
+ border-radius: 7px; /* iExplorer 9 */	
+
+ box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27);
+ -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27);
+ -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.27);
+//  height : 210px; /* 148 102 + 4 */
+//  width : 210px; /* 148 108 + 4 */	
+  /*margin: 0 auto;*/
+}
+
+.profile_summary_data {
+  padding-top: 2px;
+  padding-left: 2px;
+  padding-right: 2px;
+} 
+
+.profile_summary_actions {
+  padding: 0px 2px 0px 2px;	
+}

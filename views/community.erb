@@ -1,0 +1,29 @@
+<!-- 
+     Community View
+     ==============
+   
+     Description:
+     ------------
+     The view for the community area of the social network
+     It shows the members of the "comunity" and allows to stablish relationships between them
+     
+     It includes the 'community-members' page to manage the members of the community
+     
+     Extensions applied:
+     -------------------------
+     
+     None in this moment  
+     
+-->
+<div id="community">
+  <div id="community_menu">
+    <div class="form-button" style="display:none">
+      <%=t.community.members%>
+    </div>
+  </div>
+  <div id="community_block">
+    <%= include('community-members') %>
+  </div>
+</div>
+
+
