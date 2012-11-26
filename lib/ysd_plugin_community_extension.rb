@@ -17,29 +17,11 @@ module Huasi
     # @return [Array]
     #   An array which contains the css resources used by the module
     #
-    def page_style(context={})
-
-      ['/css/960.css',
-       '/community/css/community.css',
-       '/entitymanagement/css/entity.management.css']
-
-    end
-
+    #def page_style(context={})
     #
-    # It gets the scripts used by the module
+    #  ['/community/css/community.css']
     #
-    # @param [Context]
-    #
-    # @return [Array]
-    #   An array which contains the css resources used by the module
-    #
-    def page_script(context={})
-    
-      ["/photo_gallery/js/ysd-photo-gallery.js"]    
-    
-    end
-
-
+    #end
             
     # ========= Routes ===================
     

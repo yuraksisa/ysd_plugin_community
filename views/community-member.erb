@@ -41,7 +41,10 @@
       </div>
     
       <div class="profile_summary_actions">
-         <div><a href='javascript:profileSummaryController.showMessageForm(\"<%%=profile.username%>\",\"<%%=profile.full_name%>\")'><img src="<%="/community/img/Mail.png"%>" alt="<%= t.community.send_a_message%>" title="<%= t.community.send_a_message%>" width="20" height="20"/></a></div>
+         <div><a href='javascript:profileSummaryController.showMessageForm(\"<%%=profile.username%>\",\"<%%=profile.full_name%>\")'>
+         <%= img(:src => "/community/img/Mail.png", :alt => t.community.send_a_message, :title => t.community.send_a_message,
+                 :width => "20px", :height => "20px") %> 
+         </a></div>
       </div>      
 
     </div>
