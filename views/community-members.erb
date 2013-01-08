@@ -3,7 +3,7 @@
      =========================
      
      Description :
-     -------------
+
      It shows a list of members, and it queries the system using its REST API to get the data 
 
      The view is organized in three blocks :
@@ -15,13 +15,13 @@
      It uses a 'profile_template' JS template to render the member information
 
      Social extension applied :
-     --------------------------
+
      search : to show an specific search form
 
 -->
 <div id="members" class="elements-container">
    
-   <div id="members_search" class="top-navigation-bar navigation-bar">   
+   <div id="members_search">   
      <%= call_hook(:community_search) %> 
    </div>
    
@@ -36,8 +36,47 @@
      </div>
    </div>
 </div>    
+
+<!-- Send a message (the block to send a message) -->
+
+<div id="send_message_form">
+  <%= send_message_form %>
+</div>
     
+<script type="text/tmpl" id="profile_summary">
+
+    <div class="profile_summary grid_2">
+      <div class="profile_summary_photo_block">
+        <a href="/profile/<%%= profile.username%>">
+          <img class="profile_summary_photo" src="<%%= view.photo_url(profile) %>"/>
+        </a>
+      </div>
+  
+      <div class="profile_summary_data">
+          <div>
+            <a href="/profile/<%%= profile.username%>">
+              <%%= profile.full_name.split(' ')[0].substring(0,15) %>
+            </a>&nbsp;
+            <span class="age">(<%%= profile.age || '-' %>)</span>   
+          </div>
+          <!-- profile extensions (plus data) -->
+          <%= call_hook(:community_member) %>
+      </div>
+    
+      <div class="profile_summary_actions">
+         <div><a href='javascript:membersController.showMessageForm(\"<%%=profile.username%>\",\"<%%=profile.full_name%>\")'>
+         <%= img(:src => "/community/img/Mail.png", :alt => t.community.send_a_message, :title => t.community.send_a_message,
+                 :width => "20px", :height => "20px") %> 
+         </a></div>
+      </div>      
+
+    </div>
+
+</script>
+
 <script type="text/javascript">
+
+require(['jquery', 'ysdtemplate', 'YSDjson2','jquery.ui'], function($, tmpl){
 
   membersModel = {
   	
@@ -105,7 +144,6 @@
  	  
  	  summary_page_message : function() { /* Get the summary block message */
  	     return membersModel.summary.total + ' <%= t.community.members_literal %>';
- 	  /*	return Math.max(((membersModel.navigator.page-1) * membersModel.navigator.page_size), 1)+ ' - ' + Math.min(((membersModel.navigator.page) * membersModel.navigator.page_size), membersModel.summary.total) + ' de ' + membersModel.summary.total; */
  	  },
  	  
  	  update_hash : function() {
@@ -263,9 +301,24 @@
   	  
   	  membersModel.navigator.nextPage();
   	
-  	}
+  	},
  
-  	
+ 
+    showMessageForm : function(to, to_name) { /* Show the message form */
+    
+      var from = '<%=user['username']%>';
+      var from_name = '<%=user['full_name']%>'; 
+      var messageForm = document.getElementById('send_message_form');
+      
+      messageModel.setSubject('');
+      messageModel.setSender({'address': from, 'name': from_name});
+      messageModel.addReceiver({'address': to, 'name': to_name});
+      
+      messageView.showForm();
+        
+    }
+
+
   };
   
   membersView = {
@@ -331,7 +384,7 @@
   	  	 var index = 0;
   	     for (profile in membersModel.search_result) 
   	     {
-  		   html += this.show_profile_template({'index':index++, 'profile':membersModel.search_result[profile]});	
+  		   html += this.show_profile_template({'index':index++, 'profile':membersModel.search_result[profile], 'view': this, 'controller': membersController});	
   		 }
   		 
   	  }
@@ -344,7 +397,25 @@
   	
   	  $('#messages_summary_page').html( membersModel.navigator.summary_page_message() );	
   		
-  	}
+  	},
+
+    photo_url : function(profile) {
+  
+      var photo = null;
+      
+      if (profile.photo_url_small && profile.photo_url_small.length > 0) {
+        return profile.photo_url_small; 
+      }
+      else
+      {
+        if (profile.sex && profile.sex === '1') {
+          return '<%="/profile/img/woman_small.jpg"%>';
+        }
+      }
+      
+      return '<%="/profile/img/man_small.jpg"%>';
+          
+    }    
   	
   	
   };  
@@ -355,8 +426,6 @@
             
   });
 
+});
+
 </script>
-
-<!-- Include the member rendering/management -->
-
-<%= include('community-member') %>

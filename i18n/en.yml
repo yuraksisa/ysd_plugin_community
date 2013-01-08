@@ -1,4 +1,5 @@
 community:
+  people: People
   members: All  
   members_literal: members
   send_a_message: Send message
