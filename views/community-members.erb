@@ -25,7 +25,7 @@
      <%= call_hook(:community_search) %> 
    </div>
    
-   <div id="members_list" class="elements-list">
+   <div id="members_list">
    </div>
    
    <div class="bottom-navigation-bar navigation-bar">
@@ -327,9 +327,9 @@ require(['jquery', 'ysdtemplate', 'YSDjson2','jquery.ui'], function($, tmpl){
   	
   	init : function() {
   	
-  	  if (!membersModel.recover_state()) {
+  	  //if (!membersModel.recover_state()) {
   	  	membersModel.search();
-  	  }
+  	  //}
   		
   	  $('#previous_page_button').bind('click', function() {
   	 	membersController.previousPage();
