@@ -37,7 +37,20 @@ module Huasi
                  :title => 'Community',
                  :description => 'The community page',
                  :fit => 1,
-                 :module => :contact}]
+                 :module => :community},
+                {:path => '/profile/:id',
+                 :regular_expression => /^\/profile\/.+/,
+                 :title => 'Show profile',
+                 :description => 'Visit a user profile',
+                 :fit => 1,
+                 :module => :community},
+                {:path => '/profile',
+                 :regular_expression => /^\/profile/,
+                 :title => 'Show our profile',
+                 :description => 'Visit our profile',
+                 :fit => 1,
+                 :module => :community},              
+               ]
     
     end
  
