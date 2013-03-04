@@ -17,7 +17,6 @@ module Sinatra
         app.get "/community" do
     
           #authorized! 
-    
           load_page :community
     
         end
