@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name    = "ysd_plugin_community"
-  s.version = "0.1.4"
+  s.version = "0.1.7"
   s.authors = ["Yurak Sisa Dream"]
   s.date    = "2012-06-08"
   s.email   = ["yurak.sisa.dream@gmail.com"]

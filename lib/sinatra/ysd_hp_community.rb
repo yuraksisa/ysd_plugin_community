@@ -1,4 +1,4 @@
-require 'ysd_ui_page'
+require 'ui/ysd_ui_page'
 require 'renders/ysd_profile_render'
 
 
@@ -30,10 +30,17 @@ module Sinatra
     #
     def render_profile_action_button(option)
     
-      profile_button = <<-PROFILE_BUTTON
-         <div class="form-button"><a href="#{option[:link]}">#{option[:text]}</a></div>
-      PROFILE_BUTTON
-      
+      if option[:data_icon]
+       profile_button = <<-PROFILE_BUTTON
+         <div class="form-button"><a href="#{option[:link]}" data-icon=#{option[:data_icon]}></a></div>
+         <span class="smaller_text">#{option[:text]}</span>
+       PROFILE_BUTTON
+      else
+       profile_button = <<-PROFILE_BUTTON
+          <div class="form-button"><a href="#{option[:link]}">#{option[:text]}</a></div>
+       PROFILE_BUTTON
+      end
+
       if String.method_defined?(:encode)
         profile_button.encode!('UTF-8')
       end

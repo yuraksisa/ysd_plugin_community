@@ -22,7 +22,16 @@ module Huasi
     #  ['/community/css/community.css']
     #
     #end
-            
+     
+    # ========= Application regions ======
+    
+    #
+    # Retrieve the regions used by the apps 
+    #
+    def apps_regions(context={})
+      [:profile_tabs]
+    end
+
     # ========= Routes ===================
     
     # routes

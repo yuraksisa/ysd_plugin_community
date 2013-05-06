@@ -1,6 +1,8 @@
 require 'tilt' unless defined? Tilt
 require 'ysd_core_themes' unless defined?Themes::ThemeManager
+require 'ysd_md_cms' unless defined?ContentManagerSystem::Block
 require 'ui/ysd_ui_entity_aspect_render' unless defined?UI::EntityAspectRender
+require 'renders/ysd_block_renders' unless defined?CMSRenders::BlockRender
 
 module Renders
   #
@@ -28,10 +30,11 @@ module Renders
          profile_locals.merge!(locals) unless locals.nil?
          profile_locals.merge!(profile_extensions)
          profile_locals.merge!(profile_complements)
+         profile_locals.merge!(profile_blocks)
          profile_locals.merge!({:element => profile, :profile => profile})
 
          result = template.render(context, profile_locals)
-
+        
          if String.method_defined?(:force_encoding)
            result.force_encoding('utf-8')
          end
@@ -88,6 +91,35 @@ module Renders
       def profile_complements
 
        context.render_entity_aspects(profile, :profile)
+
+      end
+      
+      #
+      # Get the blocks configured on the profile regions
+      #
+      def profile_blocks
+        
+        result = {}
+
+        blocks_hash = ContentManagerSystem::Block.active_blocks(
+          Themes::ThemeManager.instance.selected_theme,
+          Plugins::Plugin.plugin_invoke(:community, :apps_regions, context),
+          context.user,
+          context.request.path_info)
+
+        blocks_hash.each do |region, blocks|
+          result[region.to_sym] = []
+          blocks.each do |block|
+            block_render = CMSRenders::BlockRender.new(block, context).render || ''
+            if String.method_defined?(:force_encoding)
+              block_render.force_encoding('utf-8')
+            end
+            result[block.region.to_sym].push({:id => block.name, 
+              :title => block.title, :body => block_render}) 
+          end
+        end
+
+        return result
 
       end
 
