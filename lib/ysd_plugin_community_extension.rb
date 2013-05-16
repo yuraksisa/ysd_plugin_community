@@ -1,4 +1,6 @@
 require 'ysd-plugins_viewlistener' unless defined?Plugins::ViewListener
+require 'ysd_md_social' unless defined?Yito::Social::JoinedUser
+require 'ysd_md_cms' unless defined?ContentManagerSystem::View
 
 #
 # Community Extension
@@ -6,23 +8,74 @@ require 'ysd-plugins_viewlistener' unless defined?Plugins::ViewListener
 module Huasi
 
   class CommunityExtension < Plugins::ViewListener
-
-    # ========= Page Building ============
-    
-    #
-    # It gets the style sheets defined in the module
-    #
-    # @param [Context]
-    #
-    # @return [Array]
-    #   An array which contains the css resources used by the module
-    #
-    #def page_style(context={})
-    #
-    #  ['/community/css/community.css']
-    #
-    #end
      
+    # ========= Installation =================
+
+    # 
+    # Install the plugin
+    #
+    def install(context={})
+
+      ContentManagerSystem::View.first_or_create({:view_name => 'current_content_joined_users'},
+       {
+         :description => 'Retrieve the users joined to the current content',
+         :model_name => 'contentuser',
+         :query_conditions => {:field => 'content.id', :operator => '$eq', :value => '#{content.id}'},
+         :query_order => [],
+         :query_arguments => [],
+         :style => :fields,
+         :v_fields => [
+            {:field => 'user.photo_url_tiny', :image => true, :link => '/profile/#{element.user.username}'}
+            ],
+         :render => :div,
+         :render_options => {},
+         :view_limit => 0,
+         :pagination => true,
+         :ajax_pagination => true,
+         :page_size => 25,
+         :pager => :default,
+         :block => true
+       })
+
+      ContentManagerSystem::View.first_or_create({:view_name => 'content_joined_users'},
+       {
+         :description => 'Retrieve the users joined to the content',
+         :model_name => 'contentuser',
+         :query_conditions => {:field => 'content.id', :operator => '$eq', :value => '%{0}'},
+         :query_order => [],
+         :query_arguments => [{:order => 0, :type => :integer, :name => 'content.id' }],
+         :style => :fields,
+         :v_fields => [
+            {:field => 'user.photo_url_tiny', :image => true, :link => '/profile/#{element.user.username}'}
+            ],
+         :render => :div,
+         :render_options => {},
+         :view_limit => 0,
+         :pagination => true,
+         :ajax_pagination => true,
+         :page_size => 25,
+         :pager => :default,
+         :block => true
+       })
+
+
+
+    end
+
+    #
+    # Extension initialization (on runtime)
+    #
+    def init(context={})
+
+      app = context[:app]
+      
+      ::Model::ViewModel.new(:contentuser, 
+         'Content Users', 
+         Yito::Social::ContentUser, 
+         :view_template_content_users,[]) 
+    
+    end
+
     # ========= Application regions ======
     
     #
@@ -63,5 +116,23 @@ module Huasi
     
     end
  
+    # ========= Aspects ==================
+    
+    #
+    # Retrieve an array of the aspects defined in the plugin
+    #
+    def aspects(context={})
+      
+      app = context[:app]
+      
+      aspects = []
+      aspects << ::Plugins::Aspect.new(:content_joined_users, app.t.aspect.content_joined_users, 
+                                       Yito::Social::JoinedUser, 
+                                       Huasi::JoinedUsersAspectDelegate.new)
+                                
+      return aspects
+       
+    end
+
   end #CommunityExtension
 end #Social

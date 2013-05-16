@@ -32,12 +32,12 @@ module Sinatra
     
       if option[:data_icon]
        profile_button = <<-PROFILE_BUTTON
-         <div class="form-button"><a href="#{option[:link]}" data-icon=#{option[:data_icon]}></a></div>
+         <div class="form-button #{option[:class]}"><a href="#{option[:link]}" data-icon=#{option[:data_icon]}></a></div>
          <span class="smaller_text">#{option[:text]}</span>
        PROFILE_BUTTON
       else
        profile_button = <<-PROFILE_BUTTON
-          <div class="form-button"><a href="#{option[:link]}">#{option[:text]}</a></div>
+          <div class="form-button #{option[:class]}"><a href="#{option[:link]}">#{option[:text]}</a></div>
        PROFILE_BUTTON
       end
 

@@ -3,3 +3,15 @@ community:
   members: All  
   members_literal: members
   send_a_message: Send message
+#
+# Aspect description 
+#  
+aspect:
+  content_joined_users: Join users to contents
+#
+# Content joined users
+#
+content_joined_users:
+  joined: Attenders
+  join: Join
+  disjoin: Cancel

@@ -10,6 +10,7 @@ Plugins::SinatraAppPlugin.register :community do
    sinatra_helper    Sinatra::CommunityHelpers
    sinatra_extension Sinatra::YSD::Community
    sinatra_extension Sinatra::YSD::CommunityProfile
+   sinatra_extension Sinatra::YSD::JoinUsersToContent
    hooker            Huasi::CommunityExtension
   
 end

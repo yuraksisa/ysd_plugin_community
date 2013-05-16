@@ -1,0 +1,117 @@
+<script type="text/javascript">
+
+require(['jquery','json2'], function($) {
+
+  JoinUsersHelper = function() {
+     
+     this.state = '<%=current_state%>';
+
+     this.init = function() {
+       
+       switch (this.state) {
+
+         case 'user_joined':
+           this.userJoined();
+           break;
+
+         case 'user_not_joined':
+           this.userNotJoined();
+           break;
+
+       }  
+
+       this.loadJoinedUsers();
+
+     }
+
+     this.joinUser = function() {
+       
+       var self = this;
+
+       $.ajax({
+          url:  '<%=join_action_url%>',
+          type: 'POST',
+          data: {content_id:    '<%=element.id%>',
+                 user_username: '<%=user.username%>' },
+          success: function(data, textStatus, jqXHR) {
+            self.changeStatus('userJoined');
+          },
+          error: function(data, textStatus, jqXHR) {
+            self.changeStatus('errorJoiningUser');
+          }
+       });
+
+     };
+
+     this.disjoinUser = function() {
+
+       var self = this;
+
+       $.ajax({
+          url:  '<%=join_action_url%>',
+          type: 'POST',
+          data: {content_id:    '<%=element.id%>',
+                 user_username: '<%=user.username%>' },
+          success: function(data, textStatus, jqXHR) {
+            self.changeStatus('userJoined');
+          },
+          error: function(data, textStatus, jqXHR) {
+            self.changeStatus('errorJoiningUser');
+          }
+       });
+
+     };
+
+     this.changeStatus = function(newStatus) {
+
+       switch (newStatus) {
+
+         case 'userJoined':
+           this.userJoined();
+           break;
+
+         case 'errorJoiningUser':
+           alert('Error');
+           break;
+
+         case 'userDisjoined':
+           this.userNotJoined();
+           break;
+
+         case 'errorDisjoingUser':
+           alert('Error');
+           break;
+
+       }
+
+     };
+
+     this.userNotJoined = function() {
+       var self = this;
+       $('#join_button a[name=join_disjoin_button]').text('<%=join_action_title%>');
+       $('#join_button a[name=join_disjoin_button]').unbind();
+       $('#join_button a[name=join_disjoin_button]').bind('click', function() {
+         self.joinUser();
+       });
+     };
+
+     this.userJoined = function() {
+       $('#join_button a[name=join_disjoin_button]').text('<%=disjoin_action_title%>');
+       $('#join_button a[name=join_disjoin_button]').unbind();
+       $('#join_button a[name=join_disjoin_button]').bind('click', function() {
+         self.disjoinUser();
+       });
+     };
+
+     this.loadJoinedUsers = function() {
+       $('#joined_users').load('/view/content_joined_users/<%=element.id%>');
+     }
+
+  };
+
+  var joinUsersHelper = new JoinUsersHelper();
+  joinUsersHelper.init();
+  
+});
+
+</script>

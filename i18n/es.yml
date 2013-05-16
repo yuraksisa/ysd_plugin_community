@@ -3,3 +3,15 @@ community:
   members: Todos
   members_literal: personas
   send_a_message: Enviar mensaje
+#
+# Aspect description 
+#
+aspect:
+  content_joined_users: Añadir usuarios a los contenidos
+#
+# Content joined users
+#
+content_joined_users:
+  joined: Participan
+  join: Participar
+  disjoin: Cancelar

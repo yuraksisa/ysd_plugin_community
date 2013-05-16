@@ -3,3 +3,15 @@ community:
   members: Tots
   members_literal : persones
   send_a_message: Enviar missatge 
+#
+# Aspect description 
+#
+aspect:
+  content_joined_users: Afegir usuaris als continguts
+#
+# Content joined users
+#
+content_joined_users:
+  joined: Participen
+  join: Participar
+  disjoin: Cancel.lar

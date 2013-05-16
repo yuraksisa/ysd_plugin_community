@@ -60,8 +60,8 @@
     <div id="profile-connections" class="grid_3">
       <% if profile.creation_date and profile.creation_date.is_a?DateTime %>
       <div class="left-separator left-margin left-space" style="min-height:150px">
-        <span class="less_contrast_text"><%= t.profile.member_since %></span> 
-        <span><%=profile.creation_date.strftime("%d.%m.%Y")%></span>
+        <span class="less_contrast_text uppercase_text smaller_text"><%= t.profile.member_since %></span> 
+        <span class="smaller_text"><%=profile.creation_date.strftime("%d.%m.%Y")%></span>
       </div>
       <% end %>     
       
