@@ -5,6 +5,7 @@ require(['jquery','json2'], function($) {
   JoinUsersHelper = function() {
      
      this.state = '<%=current_state%>';
+     this.result = null;
 
      this.init = function() {
        
@@ -34,6 +35,7 @@ require(['jquery','json2'], function($) {
           data: {content_id:    '<%=element.id%>',
                  user_username: '<%=user.username%>' },
           success: function(data, textStatus, jqXHR) {
+            self.result = data;
             self.changeStatus('userJoined');
           },
           error: function(data, textStatus, jqXHR) {
@@ -48,12 +50,13 @@ require(['jquery','json2'], function($) {
        var self = this;
 
        $.ajax({
-          url:  '<%=join_action_url%>',
+          url:  '<%=disjoin_action_url%>',
           type: 'POST',
           data: {content_id:    '<%=element.id%>',
                  user_username: '<%=user.username%>' },
           success: function(data, textStatus, jqXHR) {
-            self.changeStatus('userJoined');
+            self.result = data;
+            self.changeStatus('userDisjoined');
           },
           error: function(data, textStatus, jqXHR) {
             self.changeStatus('errorJoiningUser');
@@ -86,6 +89,18 @@ require(['jquery','json2'], function($) {
 
      };
 
+     this.userJoined = function() {
+       var self = this;
+       $('#join_button a[name=join_disjoin_button]').text('<%=disjoin_action_title%>');
+       $('#join_button a[name=join_disjoin_button]').unbind();
+       $('#join_button a[name=join_disjoin_button]').bind('click', function() {
+         self.disjoinUser();
+       });
+       if (this.result) {
+         $('#joined_users').html(this.result);
+       }
+     };
+
      this.userNotJoined = function() {
        var self = this;
        $('#join_button a[name=join_disjoin_button]').text('<%=join_action_title%>');
@@ -93,14 +108,9 @@ require(['jquery','json2'], function($) {
        $('#join_button a[name=join_disjoin_button]').bind('click', function() {
          self.joinUser();
        });
-     };
-
-     this.userJoined = function() {
-       $('#join_button a[name=join_disjoin_button]').text('<%=disjoin_action_title%>');
-       $('#join_button a[name=join_disjoin_button]').unbind();
-       $('#join_button a[name=join_disjoin_button]').bind('click', function() {
-         self.disjoinUser();
-       });
+       if (this.result) {
+         $('#joined_users').html(this.result);
+       }
      };
 
      this.loadJoinedUsers = function() {

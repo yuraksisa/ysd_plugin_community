@@ -22,7 +22,7 @@ module Sinatra
 
           if content and user
             content.join(user)
-            status 200
+            call! env.merge({"PATH_INFO" => "/view/content_joined_users/#{content.id}", "REQUEST_METHOD" => 'GET'}) 
           else
             status 404
           end
@@ -39,7 +39,7 @@ module Sinatra
 
           if content and user
             content.disjoin(user)
-            status 200
+            call! env.merge({"PATH_INFO" => "/view/content_joined_users/#{content.id}", "REQUEST_METHOD" => 'GET'}) 
           else
             status 404
           end
