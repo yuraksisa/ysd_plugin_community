@@ -105,7 +105,8 @@ module Renders
           Themes::ThemeManager.instance.selected_theme,
           Plugins::Plugin.plugin_invoke(:community, :apps_regions, context),
           context.user,
-          context.request.path_info)
+          context.request.path_info,
+          nil)
 
         blocks_hash.each do |region, blocks|
           result[region.to_sym] = []
