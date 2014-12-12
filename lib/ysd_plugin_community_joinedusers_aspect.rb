@@ -39,9 +39,9 @@ module Huasi
       else    
         locals = {:element => element}
         locals.store(:user, app.user)
-        locals.store(:join_action_url, "/join/user/content")
+        locals.store(:join_action_url, "/api/join/user/content")
         locals.store(:join_action_title, app.t.content_joined_users.join)
-        locals.store(:disjoin_action_url, "/disjoin/user/content")
+        locals.store(:disjoin_action_url, "/api/disjoin/user/content")
         locals.store(:disjoin_action_title, app.t.content_joined_users.disjoin)
         if element.user_joined?(app.user)
           locals.store(:current_state, 'user_joined')

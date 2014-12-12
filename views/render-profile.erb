@@ -18,55 +18,56 @@
 
 <div>
   
-  <h2><%=profile.full_name%></h2>
-  <div id="profile_header" class="container_12 bottom-margin bottom-space top-margin bottom-box-shadow">
-    
-    <div id="profile-photo" class="grid_2">
-      <img id="profile_photo_img" src="<%=profile_photo_url(profile)%>"/>
+  <div id="profile_header" class="container_12 bottom-margin bottom-space top-margin">
+    <div class="box-shadow color-2 background-color-1 overflow all-space">
+     
+     <div id="profile-photo" class="grid_3">
+      <div class="right-separator right-margin">
+        <div class="centered_text" style="font-size:2em"><%=profile.full_name%></div>
+        <img id="profile_photo_img" src="<%=profile_photo_url(profile)%>"/>
+      
+        <% if user.username == profile.username %>
+          <div class="margin-top smaller_text">
+            <%= profile_action %>
+            <div id="edit_profile_button" class="centered_text"><a href="/profile/edit"><%=t.profile.edit_profile%></a></div>
+          </div>
+        <% end %> 
 
-      <% if user.username == profile.username %>
-        <div class="margin-top">
-          <%= profile_action %>
-          <div id="edit_profile_button" class="centered_text"><a href="/profile/edit"><%=t.profile.edit_profile%></a></div>
-        </div>
-      <% end %>      
-
-    </div>
-    
-    <div id="profile-actions" class="grid_2">
-      <% if user.username != profile.username %>
-        <%= profile_not_owner_action %>
-      <% end %>
-      <% if defined?element_actions and not element_actions.empty? %>
-        <%= element_actions %>
-      <% end %>       
-    </div>
-
-    <div id="profile-description" class="grid_5">
-      <div class="left-separator left-margin left-space" style="min-height:150px">
         <% if profile.country_of_origin %>
-        <div style="line-height:1.618em">
-           <span data-icon="&#xe004;" aria-hidden="true"><%=profile.country_of_origin%></span>
+        <div class="centered_text bottom-margin smaller_text">
+          <span data-icon="&#xe004;" aria-hidden="true"><%=profile.country_of_origin%></span>
         </div> 
         <% end %>
-        <% if defined?element_custom_above and not element_custom_above.empty?%>
+
+        <div id="profile-actions" class="centered_text">
+          <% if user.username != profile.username %>
+            <%= profile_not_owner_action %>
+          <% end %>
+          <% if defined?element_actions and not element_actions.empty? %>
+            <%= element_actions %>
+          <% end %>       
+        </div>
+      </div>
+     </div>
+    
+
+     <div id="profile-description" class="grid_9">
+      <div>
+        <% if profile.creation_date and profile.creation_date.is_a?DateTime %>
         <div>
+          <span class="less_contrast_text uppercase_text smaller_text"><%= t.profile.member_since %></span> 
+          <span class="smaller_text"><%=profile.creation_date.strftime("%d.%m.%Y")%></span>
+        </div>
+        <% end %>          
+        <% if defined?element_custom_above and not element_custom_above.empty?%>
+        <div class="smaller_text top-margin">
           <%= element_custom_above %>
         </div>
         <% end %>             
       </div>
-    </div>
+     </div>
 
-    <div id="profile-connections" class="grid_3">
-      <% if profile.creation_date and profile.creation_date.is_a?DateTime %>
-      <div class="left-separator left-margin left-space" style="min-height:150px">
-        <span class="less_contrast_text uppercase_text smaller_text"><%= t.profile.member_since %></span> 
-        <span class="smaller_text"><%=profile.creation_date.strftime("%d.%m.%Y")%></span>
-      </div>
-      <% end %>     
-      
     </div>
-
   </div>
 
   <div id="profile_bottom" class="container_12">
@@ -83,12 +84,11 @@
       <% end %>
 
       <% if profile.age %>
-      <div class="item_properties_attributes top-margin">
+      <div class="item_properties_attributes top-margin smaller_text">
         <div style="item_properties_attribute">
           <span class="item_properties_attribute_name more_contrast_text"><%=t.profile.gender%></span>
           <span class="item_properties_attribute_value more_contrast_text"><%=t.profile.age%></span>
         </div>
-        
         <div style="item_properties_attributes">
           <div style="item_properties_attribute">
             <span class="item_properties_attribute_name"><%= age_sex[0]%></span>
@@ -105,7 +105,7 @@
         <div class="no-border no-background left-margin left-space left-separator overflow ">
           <ul id="content_tabs" class="no-border no-background"class="no-border no-background">  
           <% profile_tabs.each do |profile_tab| %>
-            <li class="no-border no-background" style="border:none; backgrond:none"><a href="#<%=profile_tab[:id]%>"><%=profile_tab[:title]%></a></li>
+            <li class="no-border no-background" style="border:none; backgrond:none"><a name="<%=profile_tab[:id]%>" href="#<%=profile_tab[:id]%>"><%=profile_tab[:title]%></a></li>
           <% end %>
           </ul>
           <div id="content">
@@ -139,17 +139,17 @@
   require(['jquery'], function($) {
     $(document).ready(function() {
       $("#content > div").hide(); // Initially hide all content
-      $("#tabs li:first").attr("id","current"); // Activate first tab
+      $("#content_tabs li:first").attr("id","current"); // Activate first tab
       $("#content div:first").fadeIn(); // Show first tab content
     
-      $('#tabs a').click(function(e) {
+      $('#content_tabs a').click(function(e) {
         e.preventDefault();
         if ($(this).closest("li").attr("id") == "current"){ //detection for current tab
          return;       
         }
         else{             
           $("#content > div").hide(); //Hide all content
-          $("#tabs li").attr("id",""); //Reset id's
+          $("#content_tabs li").attr("id",""); //Reset id's
           $(this).parent().attr("id","current"); // Activate this
           $('#' + $(this).attr('name')).fadeIn(); // Show content for current tab
         }

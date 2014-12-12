@@ -15,7 +15,7 @@ module Sinatra
         #
         # Join an user to the content
         #
-        app.post '/join/user/content', :allowed_usergroups => ['user','staff'] do
+        app.post '/api/join/user/content', :allowed_usergroups => ['user','staff'] do
 
           content = ContentManagerSystem::Content.get(params[:content_id])
           user = Users::Profile.get(params[:user_username])
@@ -32,7 +32,7 @@ module Sinatra
         #
         # Disjoin a user to the content
         #
-        app.post '/disjoin/user/content', :allowed_usergroups => ['user','staff'] do 
+        app.post '/api/disjoin/user/content', :allowed_usergroups => ['user','staff'] do 
 
           content = ContentManagerSystem::Content.get(params[:content_id])
           user = Users::Profile.get(params[:user_username])
