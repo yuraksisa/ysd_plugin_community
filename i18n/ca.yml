@@ -15,3 +15,5 @@ content_joined_users:
   joined: Participen
   join: Participar
   disjoin: Cancel.lar
+search_form:
+  no_results: No hi ha resultats  

@@ -15,3 +15,5 @@ content_joined_users:
   joined: Attenders
   join: Join
   disjoin: Cancel
+search_form:
+  no_results: No results  

@@ -15,7 +15,7 @@ module Sinatra
 
        profile_page = UI::Page.new(:title => profile.full_name, 
          :content => Renders::ProfileRender.new(profile, 
-         self).render(options[:locals]))
+         self).render(options[:locals]), :resource => :profile)
       
        page(profile_page, options) 
 

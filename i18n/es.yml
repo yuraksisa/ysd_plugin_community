@@ -12,6 +12,8 @@ aspect:
 # Content joined users
 #
 content_joined_users:
-  joined: Participan
-  join: Participar
-  disjoin: Cancelar
+  joined: Participantes
+  join: ¡Me apunto!
+  disjoin: No me apunto
+search_form:
+  no_results: No hay resultados

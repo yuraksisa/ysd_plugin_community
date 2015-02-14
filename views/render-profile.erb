@@ -23,7 +23,7 @@
      
      <div id="profile-photo" class="grid_3">
       <div class="right-separator right-margin">
-        <div class="centered_text" style="font-size:2em"><%=profile.full_name%></div>
+        <div class="centered_text" style="font-size:2em; margin-bottom:0.2em"><%=profile.full_name%></div>
         <img id="profile_photo_img" src="<%=profile_photo_url(profile)%>"/>
       
         <% if user.username == profile.username %>
@@ -50,8 +50,37 @@
       </div>
      </div>
     
+   <div id="user-information" class="grid_5">
+     <div class="right-separator right-margin right-space">
 
-     <div id="profile-description" class="grid_9">
+      <% if profile.age %>
+      <div class="item_properties_attributes top-margin smaller_text overflow">
+        <div style="item_properties_attribute">
+          <span class="item_properties_attribute_name more_contrast_text"><%=t.profile.gender%></span>
+          <span class="item_properties_attribute_value more_contrast_text"><%=t.profile.age%></span>
+        </div>
+        <div style="item_properties_attributes">
+          <div style="item_properties_attribute">
+            <span class="item_properties_attribute_name"><%= age_sex[0]%></span>
+            <span class="item_properties_attribute_value"><%= "#{age} #{t.profile.years}" %></span>
+          </div>
+        </div> 
+      </div>
+      <% end %>
+
+        <% if profile.about_me %>
+        <div class="top-margin">
+          <div class="uppercase_text more_contrast_text smaller_text"><%=t.profile.about_me%></div>
+          <div class="smaller_text">
+            <%= profile.about_me.gsub(/\n/,'<br/>') %>
+          </div>        
+        </div>
+        <% end %>
+
+     </div> 
+    </div>
+
+     <div id="profile-description" class="grid_4">
       <div>
         <% if profile.creation_date and profile.creation_date.is_a?DateTime %>
         <div>
@@ -67,39 +96,15 @@
       </div>
      </div>
 
+
     </div>
   </div>
 
   <div id="profile_bottom" class="container_12">
 
-    <div id="user-information" class="grid_4">
-      
-      <% if profile.about_me %>
-      <div>
-        <div class="uppercase_text bottom-separator"><%=t.profile.about_me%></div>
-        <div class="smaller_text">
-          <%= profile.about_me.gsub(/\n/,'<br/>') %>
-        </div>        
-      </div>
-      <% end %>
-
-      <% if profile.age %>
-      <div class="item_properties_attributes top-margin smaller_text">
-        <div style="item_properties_attribute">
-          <span class="item_properties_attribute_name more_contrast_text"><%=t.profile.gender%></span>
-          <span class="item_properties_attribute_value more_contrast_text"><%=t.profile.age%></span>
-        </div>
-        <div style="item_properties_attributes">
-          <div style="item_properties_attribute">
-            <span class="item_properties_attribute_name"><%= age_sex[0]%></span>
-            <span class="item_properties_attribute_value"><%= "#{age} #{t.profile.years}" %></span>
-          </div>
-        </div> 
-      </div>
-      <% end %>
-      
+    <div class="grid_4">
     </div>
-
+ 
     <div id="user-extras" class="grid_8">
       <% if defined?profile_tabs and not profile_tabs.empty? %>
         <div class="no-border no-background left-margin left-space left-separator overflow ">
