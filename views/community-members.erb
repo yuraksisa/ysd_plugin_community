@@ -63,10 +63,10 @@
           <%= call_hook(:community_member) %>
       </div>
     
-      <div class="profile_summary_actions">
-         <div><a href='javascript:membersController.showMessageForm(\"<%%=profile.username%>\",\"<%%=profile.full_name%>\")'>
-         <%= img(:src => "/community/img/Mail.png", :alt => t.community.send_a_message, :title => t.community.send_a_message,
-                 :width => "20px", :height => "20px") %> 
+      <div class="profile_summary_actions top-margin">
+         <div id="send_message_button" class="form-button">
+             <a href='javascript:membersController.showMessageForm(\"<%%=profile.username%>\",\"<%%=profile.full_name%>\")'>
+             <%=t.social_mail_action.send_message%>
          </a></div>
       </div>      
 
